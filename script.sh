@@ -15,6 +15,28 @@ echo "DBHost=localhost" >> /etc/zabbix/zabbix_server.conf
 echo "DBName=zabbix" >> /etc/zabbix/zabbix_server.conf 
 echo "DBUser=zabbix" >> /etc/zabbix/zabbix_server.conf
 echo "DBPassword=zabbix" >> /etc/zabbix/zabbix_server.conf
+
+cat <<EOF > /etc/zabbix/web/zabbix.conf.php
+<?php
+// Zabbix GUI configuration file
+global \$DB;
+\$DB['TYPE']     = 'MYSQL';
+\$DB['SERVER']   = '${DB_HOST}';
+\$DB['PORT']     = '0';
+\$DB['DATABASE'] = 'zabbix';
+\$DB['USER']     = 'zabbix';
+\$DB['PASSWORD'] = 'zabbix';
+// SCHEMA is relevant only for IBM_DB2 database
+\$DB['SCHEMA'] = '';
+\$ZBX_SERVER	  = 'localhost';
+\$ZBX_SERVER_PORT = '10051';
+\$ZBX_SERVER_NAME = '${ZABBIX_SERVER_NAME}';
+\$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;
+?>
+EOF
+
+
+
 systemctl start zabbix-server 
 
 
